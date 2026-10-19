@@ -5,7 +5,6 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Country, City } from "country-state-city";
 
 interface Props {
   name: string;
@@ -13,9 +12,8 @@ interface Props {
   required?: boolean;
 }
 
-const allCountries = Country.getAllCountries()
-  .slice()
-  .sort((a, b) => a.name.localeCompare(b.name));
+type CSC = typeof import("country-state-city");
+type CountryItem = { isoCode: string; name: string; flag: string };
 
 export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => {
   const [countryIso, setCountryIso] = useState<string>("FR");
@@ -25,8 +23,27 @@ export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => 
   const [city, setCity] = useState("");
   const [manual, setManual] = useState(false);
 
+  // Heavy worldwide dataset (~6 MB) is split into its own async chunk and
+  // fetched only when the user first opens a picker — so visitors who never
+  // touch the contact form never download it.
+  const [csc, setCsc] = useState<CSC | null>(null);
+  const [allCountries, setAllCountries] = useState<CountryItem[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const ensureLoaded = () => {
+    if (csc || loading) return;
+    setLoading(true);
+    import("country-state-city").then((m) => {
+      setCsc(m);
+      setAllCountries(
+        m.Country.getAllCountries().slice().sort((a, b) => a.name.localeCompare(b.name))
+      );
+    });
+  };
+
   const cities = useMemo(() => {
-    const list = City.getCitiesOfCountry(countryIso) || [];
+    if (!csc) return [];
+    const list = csc.City.getCitiesOfCountry(countryIso) || [];
     // unique names, alphabetical
     const seen = new Set<string>();
     const out: string[] = [];
@@ -37,7 +54,7 @@ export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => 
       }
     }
     return out.sort((a, b) => a.localeCompare(b));
-  }, [countryIso]);
+  }, [csc, countryIso]);
 
   const submitValue = city ? `${countryName}, ${city}` : "";
 
@@ -46,7 +63,7 @@ export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => 
       <input type="hidden" name={name} value={submitValue} required={required} />
 
       {/* Country picker */}
-      <Popover open={countryOpen} onOpenChange={setCountryOpen}>
+      <Popover open={countryOpen} onOpenChange={(o) => { if (o) ensureLoaded(); setCountryOpen(o); }}>
         <PopoverTrigger asChild>
           <Button
             type="button"
@@ -62,7 +79,7 @@ export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => 
           <Command>
             <CommandInput placeholder="Pays..." />
             <CommandList>
-              <CommandEmpty>Aucun pays.</CommandEmpty>
+              <CommandEmpty>{loading && !csc ? "Chargement…" : "Aucun pays."}</CommandEmpty>
               <CommandGroup>
                 {allCountries.map((c) => (
                   <CommandItem
@@ -103,7 +120,7 @@ export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => 
           </Button>
         </div>
       ) : (
-        <Popover open={cityOpen} onOpenChange={setCityOpen}>
+        <Popover open={cityOpen} onOpenChange={(o) => { if (o) ensureLoaded(); setCityOpen(o); }}>
           <PopoverTrigger asChild>
             <Button
               type="button"
@@ -123,13 +140,17 @@ export const CitySelect = ({ name, placeholder = "Ville", required }: Props) => 
               <CommandInput placeholder="Rechercher une ville..." />
               <CommandList>
                 <CommandEmpty>
-                  <button
-                    type="button"
-                    onClick={() => { setManual(true); setCityOpen(false); }}
-                    className="w-full flex items-center justify-center gap-2 text-sm py-2 text-accent hover:underline"
-                  >
-                    <Pencil className="w-4 h-4" /> Autre — saisir manuellement
-                  </button>
+                  {loading && !csc ? (
+                    <div className="text-sm py-2 text-muted-foreground text-center">Chargement des villes…</div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => { setManual(true); setCityOpen(false); }}
+                      className="w-full flex items-center justify-center gap-2 text-sm py-2 text-accent hover:underline"
+                    >
+                      <Pencil className="w-4 h-4" /> Autre — saisir manuellement
+                    </button>
+                  )}
                 </CommandEmpty>
                 <CommandGroup>
                   {cities.slice(0, 500).map((cityName) => (
