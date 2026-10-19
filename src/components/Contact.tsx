@@ -163,11 +163,11 @@ const Contact = () => {
 
                     {current.key === "particulier" && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input name="name" placeholder="Nom complet" required className="bg-background/50 border-white/10 h-12" />
+                        <Input name="name" autoComplete="name" placeholder="Nom complet" required className="bg-background/50 border-white/10 h-12" />
                         <PhoneInput name="phone" required />
-                        <Input type="email" name="email" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Adresse email valide requise" className="bg-background/50 border-white/10 h-12" />
+                        <Input type="email" name="email" autoComplete="email" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Adresse email valide requise" className="bg-background/50 border-white/10 h-12" />
                         <CitySelect name="city" placeholder="Ville" required />
-                        <Input name="address" placeholder="Adresse complète (n°, rue, code postal)" required className="bg-background/50 border-white/10 h-12 md:col-span-2" />
+                        <Input name="address" autoComplete="street-address" placeholder="Adresse complète (n°, rue, code postal)" required className="bg-background/50 border-white/10 h-12 md:col-span-2" />
                         <Select name="service">
                           <SelectTrigger className="bg-background/50 border-white/10 h-12 md:col-span-2">
                             <SelectValue placeholder="Service souhaité" />
@@ -185,12 +185,12 @@ const Contact = () => {
 
                     {current.key === "professionnel" && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input name="company" placeholder="Nom de l'entreprise" required className="bg-background/50 border-white/10 h-12" />
-                        <Input name="name" placeholder="Nom du contact" required className="bg-background/50 border-white/10 h-12" />
+                        <Input name="company" autoComplete="organization" placeholder="Nom de l'entreprise" required className="bg-background/50 border-white/10 h-12" />
+                        <Input name="name" autoComplete="name" placeholder="Nom du contact" required className="bg-background/50 border-white/10 h-12" />
                         <PhoneInput name="phone" required />
-                        <Input type="email" name="email" placeholder="Email professionnel" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Adresse email valide requise" className="bg-background/50 border-white/10 h-12" />
+                        <Input type="email" name="email" autoComplete="email" placeholder="Email professionnel" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Adresse email valide requise" className="bg-background/50 border-white/10 h-12" />
                         <CitySelect name="city" placeholder="Ville" required />
-                        <Input name="address" placeholder="Adresse complète (n°, rue, code postal)" required className="bg-background/50 border-white/10 h-12" />
+                        <Input name="address" autoComplete="street-address" placeholder="Adresse complète (n°, rue, code postal)" required className="bg-background/50 border-white/10 h-12" />
                         <Select name="project_type">
                           <SelectTrigger className="bg-background/50 border-white/10 h-12 md:col-span-2">
                             <SelectValue placeholder="Type de projet" />
@@ -216,10 +216,10 @@ const Contact = () => {
 
                     {current.key === "industriel" && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input name="company" placeholder="Société" required className="bg-background/50 border-white/10 h-12" />
+                        <Input name="company" autoComplete="organization" placeholder="Société" required className="bg-background/50 border-white/10 h-12" />
                         <CitySelect name="site" placeholder="Localisation du site" required />
-                        <Input name="address" placeholder="Adresse complète du site (n°, rue)" required className="bg-background/50 border-white/10 h-12 md:col-span-2" />
-                        <Input name="postal_code" placeholder="Code postal" required inputMode="numeric" pattern="\d{4,5}" className="bg-background/50 border-white/10 h-12" />
+                        <Input name="address" autoComplete="street-address" placeholder="Adresse complète du site (n°, rue)" required className="bg-background/50 border-white/10 h-12 md:col-span-2" />
+                        <Input name="postal_code" autoComplete="postal-code" placeholder="Code postal" required inputMode="numeric" pattern="\d{4,5}" className="bg-background/50 border-white/10 h-12" />
                         <Select name="scope">
                           <SelectTrigger className="bg-background/50 border-white/10 h-12">
                             <SelectValue placeholder="Périmètre" />
@@ -230,7 +230,7 @@ const Contact = () => {
                             <SelectItem value="audit">Audit technique</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Input type="email" name="email" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Adresse email valide requise" className="bg-background/50 border-white/10 h-12 md:col-span-2" />
+                        <Input type="email" name="email" autoComplete="email" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Adresse email valide requise" className="bg-background/50 border-white/10 h-12 md:col-span-2" />
                         <Textarea name="message" placeholder="Contexte technique" rows={4} className="bg-background/50 border-white/10 md:col-span-2" />
                       </div>
                     )}

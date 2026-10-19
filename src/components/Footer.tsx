@@ -1,5 +1,12 @@
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 import logoGelec from "@/assets/logo-gelec.png";
+
+const socials = [
+  { name: "Facebook", icon: Facebook, href: "#" },
+  { name: "Instagram", icon: Instagram, href: "#" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/g-elecplus/home/" },
+];
 
 const Footer = () => {
   return (
@@ -49,22 +56,34 @@ const Footer = () => {
             </div>
             <h4 className="text-sm font-semibold mb-4 text-foreground uppercase tracking-wider">Suivez-nous</h4>
             <div className="flex gap-3">
-              {[Facebook, Instagram, Linkedin].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-11 h-11 rounded-xl glass flex items-center justify-center hover:bg-primary/20 hover:border-primary/40 transition-all hover:-translate-y-1"
-                  aria-label="Social link"
-                >
-                  <Icon className="w-4 h-4 text-foreground" />
-                </a>
-              ))}
+              {socials.map(({ name, icon: Icon, href }) => {
+                const isReal = href !== "#";
+                return (
+                  <a
+                    key={name}
+                    href={href}
+                    {...(isReal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="w-11 h-11 rounded-xl glass flex items-center justify-center hover:bg-primary/20 hover:border-primary/40 transition-all hover:-translate-y-1"
+                    aria-label={`G-ELEC+ sur ${name}`}
+                  >
+                    <Icon className="w-4 h-4 text-foreground" />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        <div className="border-t border-border pt-8 text-center text-sm text-foreground/70">
+        <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-foreground/70">
           <p>© {new Date().getFullYear()} G-ELEC+. Tous droits réservés.</p>
+          <nav className="flex items-center gap-5">
+            <Link to="/mentions-legales" className="hover:text-accent transition-colors">
+              Mentions légales
+            </Link>
+            <Link to="/politique-de-confidentialite" className="hover:text-accent transition-colors">
+              Politique de confidentialité
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

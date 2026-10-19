@@ -114,6 +114,24 @@
     background-clip: text;
     color: transparent;
   }
+  .legal-content h2 {
+    @apply text-xl md:text-2xl font-bold text-foreground mt-8 mb-3 first:mt-0;
+  }
+  .legal-content h3 {
+    @apply text-base md:text-lg font-semibold text-foreground mt-6 mb-2;
+  }
+  .legal-content p {
+    @apply mb-4;
+  }
+  .legal-content ul {
+    @apply list-disc pl-6 mb-4 space-y-1.5 marker:text-accent;
+  }
+  .legal-content a {
+    @apply text-accent hover:underline;
+  }
+  .legal-content strong {
+    @apply text-foreground font-semibold;
+  }
 }
 
 @layer utilities {
